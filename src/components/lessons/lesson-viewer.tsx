@@ -1,98 +1,215 @@
+// src/components/lessons/lesson-viewer.tsx
+
 'use client';
 
-import { useState } from 'react';
+import { useRef, useEffect } from 'react';
+import { ContentBlock, Question } from '@/types/lesson';
 import { MultipleChoiceQuestion } from '../ui/multiple-choice-question';
+import { NumericQuestion } from '../ui/numeric-question';
 import { ContentSection } from '../ui/content-section';
+import { useLessonProgress } from '@/hooks/useLessonProgress';
+import { ProgressPie } from '../ui/progress-pie';
 
-interface LessonSection {
-  type: 'content' | 'question';
-  content?: string;
-  questionType?: 'multiple-choice' | 'numeric';
-  question?: string;
-  options?: string[];
-  correctAnswer?: string;
-  explanation?: string;
-  hint?: string;
+interface LessonViewerProps {
+  lessonId: string;
 }
 
-interface Lesson {
-  title: string;
-  sections: LessonSection[];
-}
-
-export function LessonViewer() {
-  const [maxVisibleSection, setMaxVisibleSection] = useState(0);
+export function LessonViewer({ lessonId }: LessonViewerProps) {
+    const [
+      { lesson, loading, error, maxVisibleSection, isComplete, completedSections },
+      { proceedToNext, completeSection, completeLesson }
+    ] = useLessonProgress(lessonId);
   
-  // Sample lesson data - later this will come from your API or files
-  const lesson: Lesson = {
-    title: "Introduction to Circular Motion",
-    sections: [
-      {
-        type: "content",
-        content: "When an object moves in a circular path, it experiences a centripetal acceleration directed toward the center of the circle."
-      },
-      {
-        type: "content",
-        content: "The magnitude of centripetal acceleration is given by:\n\n$a_c = \\frac{v^2}{r}$\n\nwhere $v$ is the velocity and $r$ is the radius of the circle."
-      },
-      {
-        type: "question",
-        questionType: "multiple-choice",
-        question: "Which way does centripetal acceleration point?",
-        options: [
-          "Away from the center",
-          "Toward the center",
-          "Tangent to the circle",
-          "In the direction of motion"
-        ],
-        correctAnswer: "B",
-        explanation: "Centripetal acceleration must point toward the center to keep the object in circular motion.",
-        hint: "Think about what force is needed to keep an object moving in a circle"
+    const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  
+    const scrollToSection = (index: number) => {
+      const sectionElement = sectionRefs.current[index];
+      if (sectionElement && lesson) {
+        // Always treat it as a question if the section is a question type
+        const isQuestion = lesson.sections[index-1].type === 'question';
+        
+        if (isQuestion) {
+          // Position the top of the question near the top of the viewport
+          // leaving just enough space for context
+          const targetPosition = sectionElement.offsetTop - 190;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        } else {
+          // For content sections, use normal offset
+          const offset = 100;
+          const targetPosition = sectionElement.offsetTop - offset;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
       }
-    ]
+    };
+  
+    // Handle section completion and scrolling
+    const handleSectionComplete = (index: number) => {
+      completeSection(index);
+      const isLastSection = lesson && index === lesson.sections.length - 1;
+      
+      if (isLastSection) {
+        completeLesson();
+      } else {
+        proceedToNext();
+        // Add a small delay to ensure the new section is rendered before scrolling
+        setTimeout(() => {
+          scrollToSection(index + 1);
+        }, 100);
+      }
+    };  
+
+  // Calculate progress based on completed sections
+  const calculateProgress = () => {
+    if (!lesson) return 0;
+    const numCompleted = completedSections.size;
+    const totalSections = lesson.sections.length;
+    return totalSections > 0 ? numCompleted / totalSections : 0;
   };
 
-  const handleContinue = () => {
-    setMaxVisibleSection(prev => Math.min(prev + 1, lesson.sections.length - 1));
+  // Helper function to convert content blocks to string
+  const contentBlocksToString = (blocks: ContentBlock[]): string => {
+    return blocks.map(block => {
+      switch (block.type) {
+        case 'text':
+          return block.content;
+        case 'latex':
+          return block.display ? `$$${block.content}$$` : `$${block.content}$`;
+        case 'diagram':
+          return '[DIAGRAM]';
+        default:
+          return '';
+      }
+    }).join('\n\n');
   };
+
+  // Render question based on type
+  const renderQuestion = (question: Question, index: number, isActive: boolean) => {
+    switch (question.type) {
+      case 'multiple-choice':
+        return (
+          <MultipleChoiceQuestion
+            question={question.question}
+            options={question.options}
+            correctAnswer={question.correctAnswer}
+            explanation={question.explanation}
+            hint={question.hint || ''}
+            onCorrect={() => handleSectionComplete(index)}
+            isActive={isActive}
+          />
+        );
+      case 'numeric':
+        return (
+          <NumericQuestion
+            question={question.question}
+            correctAnswer={question.correctAnswer}
+            tolerance={question.tolerance}
+            explanation={question.explanation}
+            hint={question.hint || ''}
+            onCorrect={() => handleSectionComplete(index)}
+            isActive={isActive}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white p-8 flex items-center justify-center">
+        <div className="text-xl">Loading lesson...</div>
+      </div>
+    );
+  }
+
+  if (error || !lesson) {
+    return (
+      <div className="min-h-screen bg-gray-950 text-white p-8 flex items-center justify-center">
+        <div className="text-xl text-red-400">
+          {error || 'Failed to load lesson'}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-950 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">{lesson.title}</h1>
-        
-        {/* Render all sections up to maxVisibleSection */}
+        {/* Lesson header */}
+            <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">{lesson.title}</h1>
+            <p className="text-gray-400 mb-2">{lesson.description}</p>
+            <div className="flex gap-4 text-sm">
+                <span className="px-2 py-1 bg-blue-900 rounded-full capitalize">
+                {lesson.estimatedTime}
+                </span>
+                {lesson.tags?.map(tag => (
+                <span key={tag} className="px-2 py-1 bg-blue-900/50 rounded-full">
+                    {tag}
+                </span>
+                ))}
+            </div>
+            </div>
+
+        {/* Lesson sections */}
         <div className="space-y-8">
           {lesson.sections.slice(0, maxVisibleSection + 1).map((section, index) => (
-            <div key={index} className="fade-in">
-              {section.type === "content" && (
-                <ContentSection 
-                  content={section.content!}
-                  onContinue={handleContinue}
-                  showContinue={index === maxVisibleSection}
+            <div 
+              key={index} 
+              ref={el => sectionRefs.current[index] = el}
+              className="fade-in"
+            >
+              {section.type === 'content' && section.content && (
+                <ContentSection
+                  content={contentBlocksToString(section.content)}
+                  onContinue={() => handleSectionComplete(index)}
+                  showContinue={index === maxVisibleSection && !isComplete}
                 />
               )}
-              
-              {section.type === "question" && section.questionType === "multiple-choice" && (
-                <MultipleChoiceQuestion 
-                  question={section.question!}
-                  options={section.options!}
-                  correctAnswer={section.correctAnswer!}
-                  explanation={section.explanation!}
-                  hint={section.hint!}
-                  onCorrect={handleContinue}
-                  isActive={index === maxVisibleSection}
-                />
+
+              {section.type === 'question' && section.question && (
+                renderQuestion(
+                  section.question,
+                  index,
+                  index === maxVisibleSection && !isComplete
+                )
               )}
             </div>
           ))}
         </div>
-        
-        <div className="mt-8 sticky bottom-8 w-full bg-gray-800 rounded-full h-2">
-          <div 
-            className="bg-blue-600 h-full rounded-full transition-all duration-300"
-            style={{ width: `${(maxVisibleSection + 1) / lesson.sections.length * 100}%` }}
-          />
+
+        {/* Bottom spacer */}
+        <div className="h-screen" />
+
+        {/* Fixed position container for progress pie and completion message */}
+        <div className="fixed bottom-8 right-8 flex flex-col items-end gap-4">
+          {/* Completion message */}
+          {isComplete && (
+            <div className="bg-gray-900 border border-green-500/20 rounded-lg p-4 shadow-lg backdrop-blur-sm">
+              <div className="text-xl font-semibold text-green-400 mb-1">
+                Lesson Complete!
+              </div>
+              <p className="text-gray-400 text-sm">
+                You've completed all sections of this lesson.
+              </p>
+            </div>
+          )}
+
+          {/* Progress pie */}
+          <div className="bg-gray-900 rounded-full p-2 shadow-lg">
+            <ProgressPie 
+              progress={calculateProgress()}
+              size={48}
+            />
+          </div>
         </div>
       </div>
     </div>

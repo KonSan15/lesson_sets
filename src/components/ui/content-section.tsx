@@ -1,7 +1,10 @@
+// Path: src\components\ui
+
 'use client';
 
 import 'katex/dist/katex.min.css';
 import { InlineMath, BlockMath } from 'react-katex';
+import CircularMotionDiagram from './diagrams/circular-motion-diagram';
 
 interface ContentSectionProps {
   content: string;
@@ -10,22 +13,21 @@ interface ContentSectionProps {
 }
 
 export function ContentSection({ content, onContinue, showContinue }: ContentSectionProps) {
-  // Function to render content with LaTeX
+  // Function to render content with LaTeX and diagrams
   const renderContent = (text: string) => {
-    // Split the text by LaTeX delimiters
-    const parts = text.split(/(\$\$.*?\$\$|\$.*?\$)/g);
+    // Split by LaTeX and diagram delimiters
+    const parts = text.split(/(\$\$.*?\$\$|\$.*?\$|\[DIAGRAM\])/gs);
     
     return parts.map((part, index) => {
       if (part.startsWith('$$') && part.endsWith('$$')) {
-        // Display math mode (centered equation)
         const math = part.slice(2, -2);
         return <BlockMath key={index} math={math} />;
       } else if (part.startsWith('$') && part.endsWith('$')) {
-        // Inline math mode
         const math = part.slice(1, -1);
         return <InlineMath key={index} math={math} />;
+      } else if (part === '[DIAGRAM]') {
+        return <CircularMotionDiagram key={index} />;
       }
-      // Regular text
       return <span key={index}>{part}</span>;
     });
   };
