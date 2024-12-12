@@ -68,3 +68,12 @@ export interface Course {
   description: string;
   lessons: Lesson[];
 }
+
+export interface AlphanumericQuestion extends BaseQuestion {
+  type: 'alphanumeric';
+  correctAnswer: string;
+  caseSensitive?: boolean;
+}
+
+// Update the Question type union
+export type Question = MultipleChoiceQuestion | NumericQuestion | AlphanumericQuestion;

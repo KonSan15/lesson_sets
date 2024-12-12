@@ -43,7 +43,9 @@ async function loadLessons(): Promise<Map<string, Lesson>> {
       'latin-first-declension-basics': () => import('@/data/lessons/latin-first-declension-basics'),
       'cell-signaling-protein-kinase-cascade': () => import('@/data/lessons/cell-signaling-protein-kinase-cascade'),
       'python-classes-basics': () => import('@/data/lessons/python-classes-basics'),
-      'latin-first-declension-ngd': () => import('@/data/lessons/latin-first-declension-ngd')
+      'latin-first-declension-ngd': () => import('@/data/lessons/latin-first-declension-ngd'),
+      'catullus-seven-vocabulary': () => import('@/data/lessons/catullus-seven-vocabulary'),
+      'triangle-types-mini': () => import('@/data/lessons/triangle-types-mini')
 
       // Add new lessons here
     };

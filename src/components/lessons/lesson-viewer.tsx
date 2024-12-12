@@ -9,6 +9,7 @@ import { NumericQuestion } from '../ui/numeric-question';
 import { ContentSection } from '../ui/content-section';
 import { useLessonProgress } from '@/hooks/useLessonProgress';
 import { ProgressPie } from '../ui/progress-pie';
+import { AlphanumericQuestion } from '../ui/alphanumeric-question';
 
 interface LessonViewerProps {
   lessonId: string;
@@ -91,6 +92,9 @@ export function LessonViewer({ lessonId }: LessonViewerProps) {
   };
 
   // Render question based on type
+  // In your LessonViewer component
+
+  // Inside the renderQuestion function, add the new case:
   const renderQuestion = (question: Question, index: number, isActive: boolean) => {
     switch (question.type) {
       case 'multiple-choice':
@@ -111,6 +115,18 @@ export function LessonViewer({ lessonId }: LessonViewerProps) {
             question={question.question}
             correctAnswer={question.correctAnswer}
             tolerance={question.tolerance}
+            explanation={question.explanation}
+            hint={question.hint || ''}
+            onCorrect={() => handleSectionComplete(index)}
+            isActive={isActive}
+          />
+        );
+      case 'alphanumeric':
+        return (
+          <AlphanumericQuestion
+            question={question.question}
+            correctAnswer={question.correctAnswer}
+            caseSensitive={question.caseSensitive}
             explanation={question.explanation}
             hint={question.hint || ''}
             onCorrect={() => handleSectionComplete(index)}
