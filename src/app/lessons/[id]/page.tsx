@@ -1,15 +1,28 @@
 // src/app/lessons/[id]/page.tsx
 
-import { loadLesson, getAllLessonIds } from '@/utils/lesson-loader';
+import { Metadata } from 'next';
 import { LessonViewer } from '@/components/lessons/lesson-viewer';
+import { loadLesson } from '@/utils/lesson-loader';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
   params: { id: string }
 }
 
-export const dynamic = 'force-dynamic'; // or 'force-static' if your lessons don't change often
-export const revalidate = 3600; // Revalidate every hour if using force-static
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const lesson = await loadLesson(params.id);
+  
+  if (!lesson) {
+    return {
+      title: 'Lesson Not Found'
+    };
+  }
+
+  return {
+    title: lesson.title,
+    description: lesson.description
+  };
+}
 
 export default async function LessonPage({ params }: PageProps) {
   const lesson = await loadLesson(params.id);
@@ -27,6 +40,8 @@ export default async function LessonPage({ params }: PageProps) {
 
 // Generate static params for known lessons
 export async function generateStaticParams() {
-  const lessonIds = await getAllLessonIds();
-  return lessonIds.map(id => ({ id }));
+  const lessons = await loadLesson('newton-laws'); // Load one lesson to test
+  if (!lessons) return [];
+  
+  return [{ id: 'newton-laws' }];
 }
