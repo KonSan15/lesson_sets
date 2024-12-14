@@ -1,5 +1,7 @@
 // src/app/page.tsx
 
+
+
 import { getAllLessons } from '@/utils/lesson-loader';
 import { LessonCard } from '@/components/ui/lesson-card';
 
@@ -23,3 +25,4 @@ export default async function Home() {
     </div>
   );
 }
+
