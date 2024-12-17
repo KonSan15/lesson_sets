@@ -180,7 +180,9 @@ export function LessonViewer({ lessonId }: LessonViewerProps) {
           {lesson.sections.slice(0, maxVisibleSection + 1).map((section, index) => (
             <div 
               key={index} 
-              ref={el => sectionRefs.current[index] = el}
+              ref={(el: HTMLDivElement | null) => {
+                sectionRefs.current[index] = el;
+              }}
               className="fade-in"
             >
               {section.type === 'content' && section.content && (

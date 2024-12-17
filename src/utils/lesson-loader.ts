@@ -2,11 +2,14 @@
 
 //Command: npm run dev
 
+// src/utils/lesson-loader.ts
+
 import { Lesson } from '@/types/lesson';
+import { lessonModules, LessonId } from '@/generated/lesson-imports';
 import { cache } from 'react';
 
 // Cache for loaded lessons
-let lessonsCache: Map<string, Lesson> | null = null;
+let lessonsCache: Map<LessonId, Lesson> | null = null;
 
 // Type guard to verify if an object is a Lesson
 function isLesson(obj: any): obj is Lesson {
@@ -22,42 +25,24 @@ function isLesson(obj: any): obj is Lesson {
   );
 }
 
-// Get all lessons using static imports
-async function loadLessons(): Promise<Map<string, Lesson>> {
+// Get all lessons using generated imports
+async function loadLessons(): Promise<Map<LessonId, Lesson>> {
   // Return cached lessons if available
   if (lessonsCache) {
     return lessonsCache;
   }
 
-  const lessons = new Map<string, Lesson>();
+  const lessons = new Map<LessonId, Lesson>();
 
   try {
-    // Import all lessons statically
-    // You'll need to manually update this list when adding new lessons
-    const modules = {
-      'circular-motion': () => import('@/data/lessons/circular-motion'),
-      'newton-laws': () => import('@/data/lessons/newton-laws'),
-      'richard-aoki-lesson': () => import('@/data/lessons/richard-aoki-lesson'),
-      'richard-aoki-comprehensive-study': () => import('@/data/lessons/richard-aoki-comprehensive-study'),
-      'aoki-asian-american-activism': () => import('@/data/lessons/aoki-asian-american-activism'),
-      'latin-first-declension-basics': () => import('@/data/lessons/latin-first-declension-basics'),
-      'cell-signaling-protein-kinase-cascade': () => import('@/data/lessons/cell-signaling-protein-kinase-cascade'),
-      'python-classes-basics': () => import('@/data/lessons/python-classes-basics'),
-      'latin-first-declension-ngd': () => import('@/data/lessons/latin-first-declension-ngd'),
-      'catullus-seven-vocabulary': () => import('@/data/lessons/catullus-seven-vocabulary'),
-      'triangle-types-mini': () => import('@/data/lessons/triangle-types-mini')
-
-      // Add new lessons here
-    };
-
-    // Load all modules
-    for (const [id, importFn] of Object.entries(modules)) {
+    // Load all modules using the generated import map
+    for (const [id, importFn] of Object.entries(lessonModules)) {
       try {
         const module = await importFn();
         const lesson = module.default;
 
         if (isLesson(lesson)) {
-          lessons.set(id, lesson);
+          lessons.set(id as LessonId, lesson);
         } else {
           console.warn(`Warning: Invalid lesson format in ${id}`);
         }
@@ -77,10 +62,11 @@ async function loadLessons(): Promise<Map<string, Lesson>> {
 // Load a specific lesson by ID
 export const loadLesson = cache(async (lessonId: string): Promise<Lesson | null> => {
   try {
-    // Try to load the lesson directly if we know its path
-    const module = await import(`@/data/lessons/${lessonId}`).catch(() => null);
-    if (module && isLesson(module.default)) {
-      return module.default;
+    if (lessonId in lessonModules) {
+      const module = await lessonModules[lessonId as LessonId]();
+      if (isLesson(module.default)) {
+        return module.default;
+      }
     }
     return null;
   } catch (error) {
@@ -103,6 +89,5 @@ export async function getAllLessonIds(): Promise<string[]> {
 
 // Validate if a lesson ID exists
 export async function isValidLessonId(id: string): Promise<boolean> {
-  const lessons = await loadLessons();
-  return lessons.has(id);
+  return id in lessonModules;
 }

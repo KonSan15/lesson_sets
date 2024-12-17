@@ -2,7 +2,7 @@
 
 import { Metadata } from 'next';
 import { LessonViewer } from '@/components/lessons/lesson-viewer';
-import { loadLesson } from '@/utils/lesson-loader';
+import { loadLesson, getAllLessonIds } from '@/utils/lesson-loader';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
@@ -40,10 +40,9 @@ export default async function LessonPage({ params }: PageProps) {
   );
 }
 
-// Generate static params for known lessons
 export async function generateStaticParams() {
-  const lessons = await loadLesson('newton-laws'); // Load one lesson to test
-  if (!lessons) return [];
-  
-  return [{ id: 'newton-laws' }];
+  const lessonIds = await getAllLessonIds();
+  return lessonIds.map(id => ({
+    id: id
+  }));
 }

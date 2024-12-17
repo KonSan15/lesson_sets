@@ -1,4 +1,5 @@
 // src/utils/dynamic-lesson-loader.ts
+/*
 import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
@@ -214,3 +215,4 @@ export async function loadLesson(lessonId: string): Promise<Lesson | null> {
     return null;
   }
 }
+  */

@@ -1,6 +1,6 @@
 // Path: src\components\ui\diagrams
 
-import { CircularMotionDiagram } from './circular-motion-diagram';
+import CircularMotionDiagram from './circular-motion-diagram';
 import { DiagramType, DiagramProps } from './types';
 
 const diagramComponents: Record<DiagramType, React.ComponentType<DiagramProps>> = {
