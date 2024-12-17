@@ -4,13 +4,9 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-    // Add trailing slash for consistent routing
+    basePath: process.env.GITHUB_ACTIONS ? '/lesson-sets' : '',
+    assetPrefix: process.env.GITHUB_ACTIONS ? '/lesson-sets/' : '',
     trailingSlash: true,
-    
-    // Set base path for GitHub Pages
-    basePath: process.env.NODE_ENV === 'production' ? '/lesson-sets' : '',
-    assetPrefix: process.env.NODE_ENV === 'production' ? '/lesson-sets/' : '',
-    
     webpack: (config) => {
       config.module.rules.push({
         test: /\.md$/,

@@ -1,5 +1,7 @@
 // Path: src\components\ui
 
+// Path: src\components\ui
+
 import Link from 'next/link';
 import { Lesson } from '@/types/lesson';
 
@@ -8,8 +10,12 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ lesson }: LessonCardProps) {
-  // Construct the correct path based on environment
-  const basePath = process.env.NODE_ENV === 'production' ? '' : '';
+  // Check if we're running on GitHub Pages
+  const isGitHubPages = typeof window !== 'undefined' && 
+    window.location.hostname.includes('github.io');
+  
+  // Use different base paths for GitHub Pages vs local
+  const basePath = isGitHubPages ? '/lesson-sets' : '';
   const lessonPath = `${basePath}/lessons/${lesson.id}`;
 
   return (
