@@ -7,12 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test:serve": "node scripts/test-server.js",
+    "build:test": "npm run build:static && npm run test:serve",
     "generate-lessons": "node scripts/generate-lesson-imports.js",
     "clean": "rimraf .next out",
     "prebuild": "npm run generate-lessons",
-    "build:static": "npm run clean && npm run prebuild && next build && touch out/.nojekyll",
-    "predeploy": "npm run build:static",
-    "deploy": "gh-pages -d out"
+    "build:static": "npm run clean && npm run prebuild && next build && type nul > out\\.nojekyll",
+    "test:build": "npm run build:static && node scripts/test-build.js",
+    "serve:test": "cd out && http-server"
   },
   "dependencies": {
     "@markdoc/next.js": "^0.3.7",
@@ -38,6 +40,7 @@
     "cross-zip-cli": "^1.0.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.1.0",
+    "express": "^4.21.2",
     "postcss": "^8",
     "raw-loader": "^4.0.2",
     "rimraf": "^6.0.1",

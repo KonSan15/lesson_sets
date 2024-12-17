@@ -8,8 +8,12 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ lesson }: LessonCardProps) {
+  // Construct the correct path based on environment
+  const basePath = process.env.NODE_ENV === 'production' ? '' : '';
+  const lessonPath = `${basePath}/lessons/${lesson.id}`;
+
   return (
-    <Link href={`/lessons/${lesson.id}`} className="block">
+    <Link href={lessonPath} className="block">
       <div className="group bg-gray-900 rounded-lg p-6 hover:bg-gray-800 transition-colors">
         <h2 className="text-2xl font-semibold mb-2 group-hover:text-blue-400">
           {lesson.title}

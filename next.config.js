@@ -4,19 +4,19 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-    // Only add basePath and assetPrefix in production
-    ...(process.env.NODE_ENV === 'production' && {
-      basePath: '/lesson-sets',
-      assetPrefix: '/lesson-sets'
-    }),
+    // Add trailing slash for consistent routing
+    trailingSlash: true,
+    
+    // Set base path for GitHub Pages
+    basePath: process.env.NODE_ENV === 'production' ? '/lesson-sets' : '',
+    assetPrefix: process.env.NODE_ENV === 'production' ? '/lesson-sets/' : '',
+    
     webpack: (config) => {
-      // Handle markdown files
       config.module.rules.push({
         test: /\.md$/,
         use: 'raw-loader'
       });
   
-      // Required fallbacks
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
@@ -24,12 +24,7 @@ const nextConfig = {
       
       return config;
     },
-    // Ensure CSS handling
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md'],
-    typescript: {
-      ignoreBuildErrors: false,
-    },
-    swcMinify: true,
-  };
-  
-  module.exports = nextConfig;
+};
+
+module.exports = nextConfig;

@@ -1,9 +1,11 @@
 // src/app/lessons/[id]/page.tsx
-
 import { Metadata } from 'next';
 import { LessonViewer } from '@/components/lessons/lesson-viewer';
 import { loadLesson, getAllLessonIds } from '@/utils/lesson-loader';
 import { notFound } from 'next/navigation';
+
+export const dynamic = 'force-static';
+export const revalidate = false;
 
 interface PageProps {
   params: { id: string }

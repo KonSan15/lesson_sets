@@ -1,9 +1,9 @@
 // src/app/page.tsx
-
-
-
 import { getAllLessons } from '@/utils/lesson-loader';
 import { LessonCard } from '@/components/ui/lesson-card';
+
+export const dynamic = 'force-static';
+export const revalidate = false;
 
 export default async function Home() {
   const lessons = await getAllLessons();
