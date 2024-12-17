@@ -10,11 +10,13 @@ const nextConfig = {
       assetPrefix: '/lesson-sets'
     }),
     webpack: (config) => {
+      // Handle markdown files
       config.module.rules.push({
         test: /\.md$/,
         use: 'raw-loader'
       });
   
+      // Required fallbacks
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
@@ -22,7 +24,12 @@ const nextConfig = {
       
       return config;
     },
+    // Ensure CSS handling
     pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md'],
+    typescript: {
+      ignoreBuildErrors: false,
+    },
+    swcMinify: true,
   };
   
   module.exports = nextConfig;

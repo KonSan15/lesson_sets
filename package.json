@@ -10,7 +10,9 @@
     "generate-lessons": "node scripts/generate-lesson-imports.js",
     "clean": "rimraf .next out",
     "prebuild": "npm run generate-lessons",
-    "build:static": "npm run clean && npm run prebuild && next build && touch out/.nojekyll"
+    "build:static": "npm run clean && npm run prebuild && next build && touch out/.nojekyll",
+    "predeploy": "npm run build:static",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
     "@markdoc/next.js": "^0.3.7",
