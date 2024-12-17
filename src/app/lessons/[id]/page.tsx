@@ -6,12 +6,11 @@ import { loadLesson, getAllLessonIds } from '@/utils/lesson-loader';
 import { notFound } from 'next/navigation';
 
 interface PageProps {
-  params: Promise<{ id: string }> | { id: string }
+  params: { id: string }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const resolvedParams = await Promise.resolve(params);
-  const lesson = await loadLesson(resolvedParams.id);
+  const lesson = await loadLesson(params.id);
   
   if (!lesson) {
     return {
@@ -26,8 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function LessonPage({ params }: PageProps) {
-  const resolvedParams = await Promise.resolve(params);
-  const lesson = await loadLesson(resolvedParams.id);
+  const lesson = await loadLesson(params.id);
   
   if (!lesson) {
     notFound();
@@ -35,7 +33,7 @@ export default async function LessonPage({ params }: PageProps) {
   
   return (
     <div className="min-h-screen bg-gray-950">
-      <LessonViewer lessonId={resolvedParams.id} />
+      <LessonViewer lessonId={params.id} />
     </div>
   );
 }

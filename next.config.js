@@ -1,21 +1,25 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: true,
+    output: 'export',
     images: {
       unoptimized: true,
     },
-    // Only add output: 'export' when doing static builds
-    ...(process.env.npm_lifecycle_event === "build:static" && {
-      output: "export",
-    }),
+    trailingSlash: true,
     webpack: (config) => {
-      // Ensure proper module handling
+      config.module.rules.push({
+        test: /\.md$/,
+        use: 'raw-loader'
+      });
+  
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
       };
+      
       return config;
-    }
-  }
+    },
+    // This ensures pages are exported with proper extensions
+    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md'],
+  };
   
-  module.exports = nextConfig
+  module.exports = nextConfig;

@@ -1,5 +1,5 @@
 // THIS FILE IS AUTO-GENERATED - DO NOT EDIT
-// Generated on 2024-12-17T02:57:41.436Z
+// Generated on 2024-12-17T05:02:01.326Z
 
 import { Lesson } from '@/types/lesson';
 

@@ -5,9 +5,6 @@
 import { getAllLessons } from '@/utils/lesson-loader';
 import { LessonCard } from '@/components/ui/lesson-card';
 
-//export const dynamic = 'force-dynamic'; // or 'force-static' if your lessons don't change often
-//export const revalidate = 3600; // Revalidate every hour if using force-static
-
 export default async function Home() {
   const lessons = await getAllLessons();
   
@@ -25,4 +22,3 @@ export default async function Home() {
     </div>
   );
 }
-
