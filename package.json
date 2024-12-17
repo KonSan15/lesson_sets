@@ -8,8 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "generate-lessons": "node scripts/generate-lesson-imports.js",
-    "export": "next build && next export",
-    "zip": "cd out && tar -czf ../lesson-sets.zip ."
+    "clean": "rimraf .next out",
+    "prebuild": "npm run generate-lessons",
+    "build:static": "npm run clean && npm run prebuild && next build && next export",
+    "build:itch": "npm run build:static && cd out && tar -czf ../lesson-sets.zip ."
   },
   "dependencies": {
     "@markdoc/next.js": "^0.3.7",
@@ -36,6 +38,7 @@
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
     "raw-loader": "^4.0.2",
+    "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5"
