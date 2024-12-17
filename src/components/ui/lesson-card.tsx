@@ -15,7 +15,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
     window.location.hostname.includes('github.io');
   
   // Use different base paths for GitHub Pages vs local
-  const basePath = isGitHubPages ? '/lesson-sets' : '';
+  const basePath = isGitHubPages ? '/lesson_sets' : '';
   const lessonPath = `${basePath}/lessons/${lesson.id}`;
 
   return (

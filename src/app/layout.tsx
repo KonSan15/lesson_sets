@@ -9,7 +9,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   // Get the base path from environment or default to empty string
-  const basePath = process.env.GITHUB_ACTIONS ? '/lesson-sets' : '';
+  const basePath = process.env.GITHUB_ACTIONS ? '/lesson_sets' : '';
   
   return (
     <html lang="en" suppressHydrationWarning>
