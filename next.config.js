@@ -4,8 +4,8 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-    basePath: process.env.GITHUB_ACTIONS ? '/lesson-sets' : '',
-    assetPrefix: process.env.GITHUB_ACTIONS ? '/lesson-sets/' : '',
+    basePath: process.env.GITHUB_ACTIONS ? '/lesson_sets' : '',
+    assetPrefix: process.env.GITHUB_ACTIONS ? '/lesson_sets/' : '',
     
     // Remove trailing slash to fix base tag issues
     trailingSlash: false,
@@ -21,7 +21,7 @@ const nextConfig = {
       if (process.env.GITHUB_ACTIONS) {
         config.output = {
           ...config.output,
-          publicPath: '/lesson-sets/_next/',
+          publicPath: '/lesson_sets/_next/',
         };
       }
   
