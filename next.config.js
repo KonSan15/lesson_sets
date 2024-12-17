@@ -4,10 +4,10 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-    // Only add basePath and assetPrefix for production builds
+    // Only add basePath and assetPrefix in production
     ...(process.env.NODE_ENV === 'production' && {
       basePath: '/lesson-sets',
-      assetPrefix: '/lesson-sets/',
+      assetPrefix: '/lesson-sets'
     }),
     webpack: (config) => {
       config.module.rules.push({
