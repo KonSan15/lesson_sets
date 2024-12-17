@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -33,6 +34,9 @@ jobs:
         run: npm run build:static
         env:
           GITHUB_ACTIONS: true
+          
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2

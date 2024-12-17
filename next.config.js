@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: 'export',
+    output: 'export',  // Required for static site generation
     images: {
-      unoptimized: true,
+      unoptimized: true,  // Required for static export
     },
     basePath: process.env.GITHUB_ACTIONS ? '/lesson-sets' : '',
     assetPrefix: process.env.GITHUB_ACTIONS ? '/lesson-sets/' : '',
@@ -20,7 +20,8 @@ const nextConfig = {
       
       return config;
     },
-    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md'],
-};
-
-module.exports = nextConfig;
+    // This ensures Next.js processes all expected file types
+    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  };
+  
+  module.exports = nextConfig;
