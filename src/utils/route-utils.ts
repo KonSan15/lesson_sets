@@ -8,7 +8,7 @@ export function getCorrectPath(path: string) {
     }
     
     // In production, ensure we use the correct base path
-    return `/lesson-sets/${cleanPath}`;
+    return `/lesson_sets/${cleanPath}`;
   }
   
   export function getLessonPath(lessonId: string) {

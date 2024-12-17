@@ -2,14 +2,14 @@ const express = require('express');
 const path = require('path');
 const app = express();
 
-const LESSON_SETS_PATH = '/lesson-sets';
+const LESSON_SETS_PATH = '/lesson_sets';
 
 // Serve static files from the out directory
 app.use(LESSON_SETS_PATH, express.static(path.join(__dirname, '../out')));
 
 // Handle all routes, including the root
 app.get('*', (req, res) => {
-  // Remove lesson-sets from the path if it exists
+  // Remove lesson_sets from the path if it exists
   const normalizedPath = req.path.replace(LESSON_SETS_PATH, '');
   
   // If it's the root path, serve index.html
