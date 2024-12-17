@@ -10,10 +10,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  deployments: write
 
 jobs:
   build:
@@ -30,13 +27,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Build
-        run: npm run build:static
-        env:
-          GITHUB_ACTIONS: true
-          
-      - name: Configure Pages
-        uses: actions/configure-pages@v3
+      - name: Debug directory structure
+        run: |
+          npm run build:static
+          echo "Directory structure:"
+          ls -la out/
+          echo "CSS files:"
+          find out/ -name "*.css"
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2

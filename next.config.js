@@ -4,39 +4,26 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-    // Ensure trailing slashes for consistent path resolution
-    trailingSlash: true,
-    
-    // Determine the base path and asset prefix based on environment
     basePath: process.env.GITHUB_ACTIONS ? '/lesson-sets' : '',
-    assetPrefix: process.env.GITHUB_ACTIONS ? 'https://konsan15.github.io/lesson-sets' : '',
+    assetPrefix: process.env.GITHUB_ACTIONS ? '/lesson-sets/' : '',
     
-    // Add custom headers for GitHub Pages
-    async headers() {
-      return [
-        {
-          source: '/:path*',
-          headers: [
-            {
-              key: 'Cache-Control',
-              value: 'no-store',
-            },
-          ],
-        },
-      ];
-    },
-  
-    // Modify webpack config to handle static assets
+    // Remove trailing slash to fix base tag issues
+    trailingSlash: false,
+    
+    // Modify webpack config for consistent path handling
     webpack: (config) => {
       config.module.rules.push({
         test: /\.md$/,
         use: 'raw-loader'
       });
   
-      // Ensure correct public path handling
-      config.output.publicPath = process.env.GITHUB_ACTIONS ? 
-        'https://konsan15.github.io/lesson-sets/_next/' : 
-        '/_next/';
+      // Ensure public path is set correctly for GitHub Pages
+      if (process.env.GITHUB_ACTIONS) {
+        config.output = {
+          ...config.output,
+          publicPath: '/lesson-sets/_next/',
+        };
+      }
   
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -45,9 +32,21 @@ const nextConfig = {
       
       return config;
     },
-    
-    // Handle all page extensions
-    pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md'],
+  
+    // Add custom headers
+    async headers() {
+      return [
+        {
+          source: '/:path*',
+          headers: [
+            {
+              key: 'Cache-Control',
+              value: 'public, max-age=31536000, immutable',
+            },
+          ],
+        },
+      ];
+    },
   };
   
   module.exports = nextConfig;

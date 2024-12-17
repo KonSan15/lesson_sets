@@ -1,4 +1,17 @@
 // src/app/page.tsx
+
+/*
+export default function TestPage() {
+  return (
+    <div className="min-h-screen bg-blue-500 p-4">
+      <h1 className="text-2xl text-white">Test Page</h1>
+      <p className="text-white">If you see this with blue background, Tailwind is working.</p>
+    </div>
+  );
+}
+
+
+*/
 import { getAllLessons } from '@/utils/lesson-loader';
 import { LessonCard } from '@/components/ui/lesson-card';
 
