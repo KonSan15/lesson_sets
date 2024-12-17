@@ -4,10 +4,11 @@ const nextConfig = {
     images: {
       unoptimized: true,
     },
-    // Update this to match your repository name
-    basePath: '/lesson-sets',
-    // This helps with serving static assets
-    assetPrefix: '/lesson-sets/',
+    // Only add basePath and assetPrefix for production builds
+    ...(process.env.NODE_ENV === 'production' && {
+      basePath: '/lesson-sets',
+      assetPrefix: '/lesson-sets/',
+    }),
     webpack: (config) => {
       config.module.rules.push({
         test: /\.md$/,
