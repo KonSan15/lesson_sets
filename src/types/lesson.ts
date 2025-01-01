@@ -9,20 +9,14 @@ export interface DiagramConfig {
   // Add other diagram-specific configuration options here
 }
 
-// Different types of content blocks that can appear in a lesson
 export type ContentBlock = {
   type: 'text';
   content: string;
 } | {
   type: 'diagram';
   diagram: DiagramConfig;
-} | {
-  type: 'latex';
-  content: string;
-  display?: boolean; // true for display math, false for inline
 };
 
-// Question types
 export interface BaseQuestion {
   question: string;
   explanation: string;

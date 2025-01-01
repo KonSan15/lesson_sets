@@ -1,6 +1,7 @@
 // Path: src\components\ui
 
 import { useState } from 'react';
+import { renderLatexContent } from '@/utils/latex-renderer';
 
 interface NumericQuestionProps {
   question: string;
@@ -70,7 +71,7 @@ export function NumericQuestion({
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-gray-900 rounded-lg">
-      <div className="mb-6 text-lg text-white">{question}</div>
+      <div className="mb-6 text-lg text-white">{renderLatexContent(question)}</div>
       
       <div className="space-y-4">
         <div className={`p-4 rounded-lg border ${
@@ -120,7 +121,7 @@ export function NumericQuestion({
       
       {showExplanation && (
         <div className="mt-4 p-4 rounded-lg bg-gray-800 text-gray-200">
-          {explanation}
+          {renderLatexContent(explanation)}
         </div>
       )}
     </div>

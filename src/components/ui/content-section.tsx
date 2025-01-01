@@ -1,5 +1,4 @@
-// Path: src\components\ui
-
+// src/components/ui/content-section.tsx
 'use client';
 
 import 'katex/dist/katex.min.css';
@@ -13,21 +12,26 @@ interface ContentSectionProps {
 }
 
 export function ContentSection({ content, onContinue, showContinue }: ContentSectionProps) {
-  // Function to render content with LaTeX and diagrams
   const renderContent = (text: string) => {
-    // Split by LaTeX and diagram delimiters
-    const parts = text.split(/(\$\$.*?\$\$|\$.*?\$|\[DIAGRAM\])/gs);
+    // Split by LaTeX delimiters
+    const parts = text.split(/(\$\$.*?\$\$|\$.*?\$|\[DIAGRAM\])/s);
     
     return parts.map((part, index) => {
+      // Handle display math ($$...$$)
       if (part.startsWith('$$') && part.endsWith('$$')) {
         const math = part.slice(2, -2);
         return <BlockMath key={index} math={math} />;
-      } else if (part.startsWith('$') && part.endsWith('$')) {
+      } 
+      // Handle inline math ($...$)
+      else if (part.startsWith('$') && part.endsWith('$')) {
         const math = part.slice(1, -1);
         return <InlineMath key={index} math={math} />;
-      } else if (part === '[DIAGRAM]') {
+      }
+      // Handle diagrams
+      else if (part === '[DIAGRAM]') {
         return <CircularMotionDiagram key={index} />;
       }
+      // Regular text
       return <span key={index}>{part}</span>;
     });
   };

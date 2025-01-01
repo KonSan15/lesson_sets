@@ -12,12 +12,11 @@ const unemploymentCalculationsPractice: Lesson = {
       content: [
         {
           type: "text",
-          content: "Section 1: Basic Labor Market Calculations"
-        },
-        {
-          "type": "latex",
-          "content": "Labor\\ Force\\ Participation\\ Rate = \\frac{Labor\\ Force}{Working\\ Age\\ Population} × 100",
-          "display": true
+          content: `Section 1: Basic Labor Market Calculations
+
+The Labor Force Participation Rate (LFPR) is a key metric in understanding employment statistics. It is calculated as:
+
+$$Labor\\ Force\\ Participation\\ Rate = \\frac{Labor\\ Force}{Working\\ Age\\ Population} × 100$$`
         }
       ]
     },
@@ -37,12 +36,11 @@ const unemploymentCalculationsPractice: Lesson = {
       content: [
         {
           type: "text",
-          content: "Section 2: Unemployment Rate Calculations"
-        },
-        {
-          "type": "latex",
-          "content": "Unemployment\\ Rate = \\frac{Unemployed}{Labor\\ Force} × 100",
-          "display": true
+          content: `Section 2: Unemployment Rate Calculations
+
+The Unemployment Rate measures the percentage of the labor force that is unemployed but actively seeking work. It is calculated as:
+
+$$Unemployment\\ Rate = \\frac{Unemployed}{Labor\\ Force} × 100$$`
         }
       ]
     },
@@ -62,17 +60,15 @@ const unemploymentCalculationsPractice: Lesson = {
       content: [
         {
           type: "text",
-          content: "Section 3: Natural and Cyclical Unemployment"
-        },
-        {
-          "type": "latex",
-          "content": "Natural\\ Rate = Frictional\\ Unemployment + Structural\\ Unemployment",
-          "display": true
-        },
-        {
-          "type": "latex",
-          "content": "Cyclical\\ Unemployment = Actual\\ Rate - Natural\\ Rate",
-          "display": true
+          content: `Section 3: Natural and Cyclical Unemployment
+
+Understanding different types of unemployment is crucial. The Natural Rate of Unemployment is composed of both frictional and structural unemployment:
+
+$$Natural\\ Rate = Frictional\\ Unemployment + Structural\\ Unemployment$$
+
+Cyclical unemployment is the difference between the actual unemployment rate and the natural rate:
+
+$$Cyclical\\ Unemployment = Actual\\ Rate - Natural\\ Rate$$`
         }
       ]
     },

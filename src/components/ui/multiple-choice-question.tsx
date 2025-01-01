@@ -1,6 +1,7 @@
 // Path: src\components\ui
 
 import { useState } from 'react';
+import { renderLatexContent } from '@/utils/latex-renderer';
 
 interface MultipleChoiceQuestionProps {
   question: string;
@@ -50,7 +51,7 @@ export function MultipleChoiceQuestion({
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 bg-gray-900 rounded-lg">
-      <div className="mb-6 text-lg text-white">{question}</div>
+      <div className="mb-6 text-lg text-white">{renderLatexContent(question)}</div>
       
       <div className="space-y-3">
         {options.map((option, index) => {
@@ -86,7 +87,7 @@ export function MultipleChoiceQuestion({
                   <span className="text-sm">{letter}</span>
                 </div>
               </div>
-              <span className="text-gray-200">{option}</span>
+              <span className="text-gray-200">{renderLatexContent(option)}</span>
             </button>
           );
         })}
@@ -124,7 +125,7 @@ export function MultipleChoiceQuestion({
       
       {showExplanation && (
         <div className="mt-4 p-4 rounded-lg bg-gray-800 text-gray-200">
-          {explanation}
+          {renderLatexContent(explanation)}
         </div>
       )}
     </div>
