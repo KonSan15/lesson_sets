@@ -81,8 +81,6 @@ export function LessonViewer({ lessonId }: LessonViewerProps) {
       switch (block.type) {
         case 'text':
           return block.content;
-        case 'latex':
-          return block.display ? `$$${block.content}$$` : `$${block.content}$`;
         case 'diagram':
           return '[DIAGRAM]';
         default:
